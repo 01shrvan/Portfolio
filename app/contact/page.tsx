@@ -66,7 +66,7 @@ export default function Contact() {
                 setPoints(prev => prev + 10)
                 alert('Congratulations! You found the Easter Egg! +10 points')
             } else {
-                alert('You\'ve already found the Easter Egg. Try something else!')
+                alert('You&apos;ve already found the Easter Egg. Try something else!')
             }
         } else if (cmd === 'points') {
             alert(`Your current points: ${points}`)

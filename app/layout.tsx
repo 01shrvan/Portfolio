@@ -18,7 +18,7 @@ export default function RootLayout({
         <meta name="description" content="Portfolio of John Doe, Full-Stack Developer" />
         <link rel="icon" href="/favicon.ico" />
       </head>
-      <body className={`${theme === 'light' ? 'bg-[#F5E6D3] text-[#2C3E50]' : 'bg-[#121B25] text-[#FFFFFF]'} transition-colors duration-300`}>
+      <body className={`${theme === 'light' ? 'bg-[#F5E6D3] text-[#2C3E50]' : 'bg-[#2C3E50] text-[#F5E6D3]'} transition-colors duration-300`}>
         <ThemeProvider value={{ theme, setTheme }}>
           {children}
         </ThemeProvider>

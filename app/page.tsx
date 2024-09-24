@@ -183,90 +183,43 @@ export default function Home() {
           </button>
         </div>
         <h2 className={`text-2xl mb-8 ${theme === 'light' ? 'text-[#34495E]' : 'text-[#ECE0C8]'}`}>Full-Stack Developer</h2>
-        <div ref={terminalRef} className={`mb-8 ${theme === 'light' ? 'bg-[#ECE0C8] text-[#2C3E50]' : 'bg-[#34495E] text-[#F5E6D3]'} p-6 rounded-lg shadow-md h-80 overflow-y-auto`}>
+        <div ref={terminalRef} className={`mb-8 ${theme === 'light' ? 'border-[#34495E]' : 'border-[#ECE0C8]'} border p-4 rounded overflow-auto h-64`}>
           <AnimatePresence>
             {output.map((line, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -10 }}
-                transition={{ duration: 0.2 }}
-                className="mb-2"
-              >
-                {line}
+              <motion.div key={index} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+                <div>{line}</div>
               </motion.div>
             ))}
           </AnimatePresence>
+          {showCursor && <span className="cursor">|</span>}
         </div>
-        <form onSubmit={handleSubmit} className={`flex items-center ${theme === 'light' ? 'bg-[#ECE0C8] text-[#2C3E50]' : 'bg-[#34495E] text-[#F5E6D3]'} p-4 rounded-lg shadow-md relative`}>
-          <span className={`mr-2 ${theme === 'light' ? 'text-[#34495E]' : 'text-[#ECE0C8]'}`}>$</span>
+        <form onSubmit={handleSubmit} className="flex mb-4">
           <input
             type="text"
             value={input}
             onChange={handleInputChange}
-            className={`flex-grow bg-transparent outline-none ${theme === 'light' ? 'text-[#2C3E50]' : 'text-[#F5E6D3]'}`}
-            placeholder="Type a command or 'help'"
-            autoFocus
+            className={`flex-1 p-2 rounded ${theme === 'light' ? 'bg-[#F5E6D3]' : 'bg-[#34495E]'} border ${theme === 'light' ? 'border-[#34495E]' : 'border-[#ECE0C8]'}`}
+            placeholder="Type a command..."
           />
-          <motion.span
-            animate={{ opacity: showCursor ? 1 : 0 }}
-            transition={{ duration: 0.2 }}
-            className={theme === 'light' ? 'text-[#34495E]' : 'text-[#ECE0C8]'}
-          >
-            |
-          </motion.span>
-          {hints.length > 0 && (
-            <div className={`absolute left-0 bottom-full mb-2 ${theme === 'light' ? 'bg-[#ECE0C8] text-[#2C3E50]' : 'bg-[#34495E] text-[#F5E6D3]'} p-2 rounded-md shadow-md`}>
-              {hints.map((hint, index) => (
-                <div key={index} className="cursor-pointer hover:bg-opacity-20 px-2 py-1 rounded" onClick={() => setInput(hint)}>
-                  {hint}
-                </div>
-              ))}
-            </div>
-          )}
+          <button type="submit" className={`ml-2 p-2 rounded ${theme === 'light' ? 'bg-[#34495E] text-[#F5E6D3]' : 'bg-[#F5E6D3] text-[#34495E]'} transition-colors duration-200`}>Submit</button>
         </form>
-      </motion.div>
-      <div className="fixed inset-0 pointer-events-none">
-        <AnimatePresence>
-          {cursorTrail.map((cursor, index) => (
-            <motion.div
-              key={cursor.id}
-              initial={{ opacity: 0.8, scale: 1 }}
-              animate={{ opacity: 0, scale: 0.8 }}
-              exit={{ opacity: 0, scale: 0.5 }}
-              transition={{ duration: 0.5, ease: 'easeOut' }}
-              style={{
-                position: 'absolute',
-                left: cursor.x,
-                top: cursor.y,
-                transform: 'translate(-50%, -50%)',
-              }}
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                height="32"
-                viewBox="0 0 32 32"
-                width="32"
-                style={{
-                  opacity: 1 - index * 0.1,
-                }}
-              >
-                <g fill="none" fillRule="evenodd" transform="translate(10 7)">
-                  <path
-                    d="m6.148 18.473 1.863-1.003 1.615-.839-2.568-4.816h4.332l-11.379-11.408v16.015l3.316-3.221z"
-                    fill="#fff"
-                  />
-                  <path
-                    d="m6.431 17 1.765-.941-2.775-5.202h3.604l-8.025-8.043v11.188l2.53-2.442z"
-                    fill="#000"
-                  />
-                </g>
-              </svg>
-            </motion.div>
+        {hints.length > 0 && (
+          <ul className={`bg-[#ECE0C8] shadow-lg rounded p-2`}>
+            {hints.map((hint, index) => (
+              <li key={index} className="hover:bg-gray-200 p-1 cursor-pointer">{hint}</li>
+            ))}
+          </ul>
+        )}
+        <div className="absolute">
+          {cursorTrail.map((item) => (
+            <div
+              key={item.id}
+              className="absolute w-4 h-4 rounded-full bg-blue-500 opacity-50"
+              style={{ top: `${item.y}px`, left: `${item.x}px` }}
+            />
           ))}
-        </AnimatePresence>
-      </div>
+        </div>
+      </motion.div>
     </div>
   )
 }

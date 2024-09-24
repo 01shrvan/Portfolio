@@ -72,7 +72,7 @@ export default function About() {
                 setPoints(prev => prev + 10)
                 alert('Congratulations! You found the Easter Egg! +10 points')
             } else {
-                alert('You\'ve already found the Easter Egg. Try something else!')
+                alert('You&apos;ve already found the Easter Egg. Try something else!')
             }
         } else if (cmd === 'points') {
             alert(`Your current points: ${points}`)
@@ -105,13 +105,13 @@ export default function About() {
                 </div>
                 <div className={`${theme === 'light' ? 'bg-[#ECE0C8]' : 'bg-[#34495E]'} p-6 rounded-lg shadow-md mb-8`}>
                     <p className="mb-4">
-                        I'm a full-stack engineer with a passion for building scalable and performant web applications. With years of experience in the industry, I've developed a keen eye for detail and a love for clean, efficient code.
+                        I&apos;m a full-stack engineer with a passion for building scalable and performant web applications. With years of experience in the industry, I&apos;ve developed a keen eye for detail and a love for clean, efficient code.
                     </p>
                     <p className="mb-4">
-                        My journey in tech started with a fascination for how things work, which naturally led me to programming. Since then, I've worked on a variety of projects, from small startups to large enterprise applications, always striving to learn and improve my craft.
+                        My journey in tech started with a fascination for how things work, which naturally led me to programming. Since then, I&apos;ve worked on a variety of projects, from small startups to large enterprise applications, always striving to learn and improve my craft.
                     </p>
                     <p>
-                        When I'm not coding, you can find me exploring new technologies, contributing to open-source projects, or sharing my knowledge through tech talks and blog posts.
+                        When I&apos;m not coding, you can find me exploring new technologies, contributing to open-source projects, or sharing my knowledge through tech talks and blog posts.
                     </p>
                 </div>
                 <h2 className={`text-2xl font-bold mb-4 ${theme === 'light' ? 'text-[#34495E]' : 'text-[#ECE0C8]'}`}>Skills</h2>
