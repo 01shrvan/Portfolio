@@ -7,12 +7,10 @@ import Head from "next/head"
 import { Github, Linkedin, Mail } from "lucide-react"
 
 const skills = [
-    "JavaScript (ES6+)",
+    "JavaScript ",
     "React & Next.js",
-    "Node.js & Express",
+    "Node.js ",
     "TypeScript",
-    "GraphQL",
-    "AWS & Serverless",
 ]
 
 export default function About() {
@@ -35,7 +33,7 @@ export default function About() {
         <>
             <Head>
                 <title>About - Shrvan Benke</title>
-                <meta name="description" content="Learn more about Shrvan Benke, a full-stack developer passionate about creating innovative web solutions." />
+                <meta name="description" content="Discover the journey of Shrvan Benke, a full-stack developer passionate about crafting efficient and innovative web solutions." />
                 <meta name="viewport" content="width=device-width, initial-scale=1" />
                 <link rel="icon" href="/favicon.ico" />
             </Head>
@@ -51,13 +49,13 @@ export default function About() {
                     </div>
                     <div className="bg-[#ECE0C8] text-[#2C3E50] p-6 rounded-lg shadow-md mb-8">
                         <p className="mb-4">
-                            I&apos;m a full-stack engineer with a passion for building scalable and performant web applications. With years of experience in the industry, I&apos;ve developed a keen eye for detail and a love for clean, efficient code.
+                            I&apos;m Shrvan, a dedicated full-stack engineer driven by a deep passion for building web applications that are scalable, performant, and user-friendly. With a wealth of experience across different projects, I continually strive for excellence in every line of code.
                         </p>
                         <p className="mb-4">
-                            My journey in tech started with a fascination for how things work, which naturally led me to programming. Since then, I&apos;ve worked on a variety of projects, from small startups to large enterprise applications, always striving to learn and improve my craft.
+                            My journey into tech began with an innate curiosity to understand how things work under the hood. That curiosity quickly led me to the world of programming, where I&apos;ve since honed my skills across a range of tools and technologies. Whether it’s contributing to dynamic startups or enhancing large-scale enterprise systems, my goal has always been to solve complex problems with clean, efficient code.
                         </p>
                         <p>
-                            When I&apos;m not coding, you can find me exploring new technologies, contributing to open-source projects, or sharing my knowledge through tech talks and blog posts.
+                            Outside of coding, I enjoy exploring cutting-edge technologies, contributing to open-source initiatives, and sharing my insights through tech talks and writing blog posts. I believe in constant growth and aim to learn something new every day.
                         </p>
                     </div>
                     <h2 className="text-2xl font-bold mb-4 text-[#34495E]">Skills</h2>
@@ -103,7 +101,7 @@ export default function About() {
                             </a>
                         </div>
                         <div className="flex items-center space-x-4">
-                            <span>mumbai, india</span>
+                            <span>mumbai, India</span>
                         </div>
                     </div>
                 </footer>

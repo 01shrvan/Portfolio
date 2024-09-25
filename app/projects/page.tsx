@@ -95,7 +95,7 @@ export default function Projects() {
                             </a>
                         </div>
                         <div className="flex items-center space-x-4">
-                            <span>mumbai, india</span>
+                            <span>mumbai, India</span>
                         </div>
                     </div>
                 </footer>

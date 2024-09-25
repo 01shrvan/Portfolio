@@ -1,176 +1,102 @@
 'use client'
 
-import { useState, useEffect, useRef } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
-import { useRouter } from 'next/navigation'
-import Head from 'next/head'
-import { Github, Linkedin, Mail } from 'lucide-react'
+import { useState } from "react"
+import Head from "next/head"
+import { Github, Linkedin, Mail } from "lucide-react"
 
-export default function Chat() {
-    const [command, setCommand] = useState('')
-    const [chatMessages, setChatMessages] = useState<{ text: string; sender: 'user' | 'bot' }[]>([
-        { text: "Hey there! I'm your AI assistant. What can I help you with today?", sender: 'bot' }
-    ])
-    const [userInput, setUserInput] = useState('')
-    const [isLoading, setIsLoading] = useState(false)
-    const [isTyping, setIsTyping] = useState(false) // Typing indicator state
-    const router = useRouter()
-    const chatContainerRef = useRef<HTMLDivElement>(null)
+export default function Contact() {
+    const [name, setName] = useState("")
+    const [email, setEmail] = useState("")
+    const [message, setMessage] = useState("")
+    const [isSubmitting, setIsSubmitting] = useState(false)
+    const [responseMessage, setResponseMessage] = useState("")
 
-    // Load chat history from local storage
-    useEffect(() => {
-        const storedMessages = localStorage.getItem('chatMessages')
-        if (storedMessages) {
-            setChatMessages(JSON.parse(storedMessages))
-        }
-    }, [])
-
-    // Save chat history to local storage
-    useEffect(() => {
-        localStorage.setItem('chatMessages', JSON.stringify(chatMessages))
-        if (chatContainerRef.current) {
-            chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight
-        }
-    }, [chatMessages])
-
-    const handleCommand = (cmd: string) => {
-        if (['home', 'about', 'projects'].includes(cmd)) {
-            router.push(cmd === 'home' ? '/' : `/${cmd}`)
-        }
-    }
-
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
-        handleCommand(command.toLowerCase().trim())
-        setCommand('')
-    }
+        setIsSubmitting(true)
 
-    const handleChatSubmit = async (e: React.FormEvent) => {
-        e.preventDefault()
-        if (userInput.trim() === '' || isLoading) return
-
-        const userMessage = { text: userInput, sender: 'user' as const }
-        setChatMessages(prev => [...prev, userMessage])
-        setUserInput('')
-        setIsLoading(true)
-        setIsTyping(true) // Start typing indicator
+        // Prepare the data to send
+        const data = { name, email, message }
 
         try {
-            const response = await fetch('/api/chat', {
-                method: 'POST',
+            const response = await fetch("/api/contact", {
+                method: "POST",
                 headers: {
-                    'Content-Type': 'application/json',
+                    "Content-Type": "application/json",
                 },
-                body: JSON.stringify({ message: userInput }),
+                body: JSON.stringify(data),
             })
 
             if (!response.ok) {
-                throw new Error('Failed to get response from AI')
+                throw new Error("Failed to send message")
             }
 
-            const data = await response.json()
-            setChatMessages(prev => [...prev, { text: data.message, sender: 'bot' }])
+            setResponseMessage("Your message has been sent successfully!")
+            // Reset form fields
+            setName("")
+            setEmail("")
+            setMessage("")
         } catch (error) {
-            console.error('Error:', error)
-            let errorMessage = "Sorry, I'm having trouble responding right now. Please try again later."
-            if (error instanceof TypeError) {
-                errorMessage = "Network error! Please check your connection.";
-            }
-            setChatMessages(prev => [...prev, { text: errorMessage, sender: 'bot' }])
+            console.error("Error:", error)
+            setResponseMessage("There was an error sending your message.")
         } finally {
-            setIsLoading(false)
-            setIsTyping(false) // Stop typing indicator
-        }
-    }
-
-    // Handle key press for new lines and sending messages
-    const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-        if (e.key === 'Enter') {
-            if (e.shiftKey) {
-                // Allow new lines with Shift + Enter
-                return;
-            }
-            handleChatSubmit(e);
+            setIsSubmitting(false)
         }
     }
 
     return (
         <>
             <Head>
-                <title>Chat - Shrvan Benke</title>
-                <meta name="description" content="Chat with an AI assistant on Shrvan Benke's portfolio site." />
+                <title>Contact - Shrvan Benke</title>
+                <meta name="description" content="Contact Shrvan Benke, a full-stack developer." />
                 <meta name="viewport" content="width=device-width, initial-scale=1" />
                 <link rel="icon" href="/favicon.ico" />
             </Head>
             <div className="min-h-screen flex flex-col bg-[#F5E6D3] text-[#2C3E50] font-mono p-8">
-                <motion.div
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    transition={{ duration: 0.5 }}
-                    className="flex-grow max-w-3xl mx-auto w-full"
-                >
-                    <div className="mb-6">
-                        <h1 className="text-4xl font-bold text-[#34495E]">Chat with AI</h1>
-                    </div>
-                    <div className="bg-[#ECE0C8] text-[#2C3E50] p-6 rounded-lg shadow-md mb-8">
-                        <h2 className="text-2xl font-bold mb-4 text-[#34495E]">AI Assistant</h2>
-                        <div ref={chatContainerRef} className="h-64 overflow-y-auto mb-4 p-4 bg-[#F5E6D3] rounded">
-                            <AnimatePresence>
-                                {chatMessages.map((message, index) => (
-                                    <motion.div
-                                        key={index}
-                                        initial={{ opacity: 0, y: 10 }}
-                                        animate={{ opacity: 1, y: 0 }}
-                                        exit={{ opacity: 0, y: -10 }}
-                                        transition={{ duration: 0.2 }}
-                                        className={`mb-2 ${message.sender === 'user' ? 'text-right' : 'text-left'}`}
-                                    >
-                                        <span className={`inline-block p-2 rounded ${message.sender === 'user' ? 'bg-[#34495E] text-[#F5E6D3]' : 'bg-[#ECE0C8] text-[#2C3E50]'}`}>
-                                            {message.text}
-                                        </span>
-                                    </motion.div>
-                                ))}
-                                {isTyping && (
-                                    <motion.div
-                                        initial={{ opacity: 0, y: 10 }}
-                                        animate={{ opacity: 1, y: 0 }}
-                                        exit={{ opacity: 0, y: -10 }}
-                                        transition={{ duration: 0.2 }}
-                                        className="mb-2 text-left"
-                                    >
-                                        <span className="inline-block p-2 rounded bg-[#ECE0C8] text-[#2C3E50]">
-                                            Typing...
-                                        </span>
-                                    </motion.div>
-                                )}
-                            </AnimatePresence>
-                        </div>
-                        <form onSubmit={handleChatSubmit} className="flex">
-                            <input
-                                type="text"
-                                value={userInput}
-                                onChange={(e) => setUserInput(e.target.value)}
-                                onKeyDown={handleKeyDown} // Handle key down events
-                                className="flex-grow bg-[#F5E6D3] text-[#2C3E50] p-2 rounded-l outline-none"
-                                placeholder="Type your message..."
-                                disabled={isLoading}
-                            />
-                            <button type="submit" className="bg-[#34495E] text-[#F5E6D3] p-2 rounded-r" disabled={isLoading}>
-                                {isLoading ? 'Sending...' : 'Send'}
-                            </button>
-                        </form>
-                    </div>
-                    <form onSubmit={handleSubmit} className="flex items-center bg-[#ECE0C8] text-[#2C3E50] p-4 rounded-lg shadow-md">
-                        <span className="mr-2 text-[#34495E]">$</span>
+                <h1 className="text-4xl font-bold text-[#34495E] mb-6 text-center">Contact Me</h1>
+                <form onSubmit={handleSubmit} className="bg-[#ECE0C8] p-8 rounded-lg shadow-md mx-auto max-w-lg">
+                    <div className="mb-4">
+                        <label className="block text-sm font-bold mb-2" htmlFor="name">Name</label>
                         <input
                             type="text"
-                            value={command}
-                            onChange={(e) => setCommand(e.target.value)}
-                            className="flex-grow bg-transparent outline-none text-[#2C3E50]"
-                            placeholder="Type 'home', 'about', or 'projects'"
+                            id="name"
+                            value={name}
+                            onChange={(e) => setName(e.target.value)}
+                            required
+                            className="w-full bg-transparent border-b border-[#34495E] outline-none text-[#2C3E50] p-2"
                         />
-                    </form>
-                </motion.div>
+                    </div>
+                    <div className="mb-4">
+                        <label className="block text-sm font-bold mb-2" htmlFor="email">Email</label>
+                        <input
+                            type="email"
+                            id="email"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                            required
+                            className="w-full bg-transparent border-b border-[#34495E] outline-none text-[#2C3E50] p-2"
+                        />
+                    </div>
+                    <div className="mb-4">
+                        <label className="block text-sm font-bold mb-2" htmlFor="message">Message</label>
+                        <textarea
+                            id="message"
+                            value={message}
+                            onChange={(e) => setMessage(e.target.value)}
+                            required
+                            rows={4}
+                            className="w-full bg-transparent border-b border-[#34495E] outline-none text-[#2C3E50] p-2"
+                        />
+                    </div>
+                    <button
+                        type="submit"
+                        disabled={isSubmitting}
+                        className={`bg-[#34495E] text-white p-2 rounded ${isSubmitting ? "opacity-50 cursor-not-allowed" : ""}`}
+                    >
+                        {isSubmitting ? "Sending..." : "Send Message"}
+                    </button>
+                </form>
+                {responseMessage && <p className={`text-center mt-4 ${responseMessage.includes("error") ? 'text-red-500' : 'text-green-500'}`}>{responseMessage}</p>}
 
                 <footer className="mt-8 pt-4 border-t border-[#2C3E50] max-w-3xl mx-auto w-full">
                     <div className="flex justify-between items-center text-sm">
@@ -189,7 +115,7 @@ export default function Chat() {
                             </a>
                         </div>
                         <div className="flex items-center space-x-4">
-                            <span>mumbai, india</span>
+                            <span>mumbai, ndia</span>
                         </div>
                     </div>
                 </footer>

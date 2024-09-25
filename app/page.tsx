@@ -15,21 +15,24 @@ export default function Home() {
   const router = useRouter()
   const terminalRef = useRef<HTMLDivElement>(null)
 
+  const initialMessages = [
+    "Welcome to my portfolio.",
+    "I'm Shrvan Benke, a passionate full-stack developer dedicated to crafting innovative web solutions.",
+    'Type "help" for available commands.',
+  ];
+
   const commands = {
-    help: "Available commands: about, projects, chat, clear, github",
-    about: "Navigate to about page",
-    projects: "Navigate to projects page",
-    chat: "Navigate to chat page",
-    clear: "Clear terminal",
-    github: "Open GitHub profile",
+    help: "Available commands: about (Learn more about me), projects (See my work), chat (Talk to me), clear (Clear the terminal), github (Visit my GitHub profile)",
+    about: "Navigate to the about page to learn more about my journey as a developer.",
+    projects: "Navigate to the projects page to explore my latest work and contributions.",
+    chat: "Navigate to the chat page for a direct conversation with me.",
+    clear: "Clear the terminal output for a fresh start.",
+    github: "Open my GitHub profile to see my repositories and contributions.",
   }
 
   useEffect(() => {
-    setOutput([
-      "Welcome to my portfolio.",
-      "I'm a full-stack developer passionate about creating innovative web solutions.",
-      'Type "help" for available commands.',
-    ])
+    setOutput(initialMessages);
+
     const cursorInterval = setInterval(() => {
       setShowCursor((prev) => !prev)
     }, 500)
@@ -40,7 +43,9 @@ export default function Home() {
       else if (hour < 18) setGreeting("Good afternoon")
       else setGreeting("Good evening")
     }
+
     updateGreeting()
+
     const greetingInterval = setInterval(updateGreeting, 60000)
 
     return () => {
@@ -59,15 +64,18 @@ export default function Home() {
     setOutput((prev) => [...prev, `$ ${cmd}`])
 
     if (cmd in commands) {
-      setOutput((prev) => [...prev, commands[cmd as keyof typeof commands]])
-      if (["about", "projects", "chat"].includes(cmd)) {
-        await simulateTyping(`Navigating to ${cmd} page...`)
-        setTimeout(() => router.push(`/${cmd}`), 1000)
-      } else if (cmd === "clear") {
-        setTimeout(() => setOutput([]), 500)
-      } else if (cmd === "github") {
-        window.open("https://github.com/pix-panther24", "_blank")
-        setOutput((prev) => [...prev, "Opening GitHub profile in a new tab..."])
+      if (cmd === "clear") {
+        // Reset output to initial messages
+        setOutput(initialMessages);
+      } else {
+        setOutput((prev) => [...prev, commands[cmd as keyof typeof commands]]);
+        if (["about", "projects", "chat"].includes(cmd)) {
+          await simulateTyping(`Navigating to ${cmd} page...`);
+          setTimeout(() => router.push(`/${cmd}`), 1000);
+        } else if (cmd === "github") {
+          window.open("https://github.com/pix-panther24", "_blank");
+          setOutput((prev) => [...prev, "Opening GitHub profile in a new tab..."]);
+        }
       }
     } else {
       setOutput((prev) => [
@@ -185,7 +193,7 @@ export default function Home() {
               </a>
             </div>
             <div className="flex items-center space-x-4">
-              <span>mumbai, india</span>
+              <span>mumbai, India</span>
             </div>
           </div>
         </footer>
