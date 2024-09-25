@@ -1,32 +1,32 @@
 'use client'
 
-import { useState, useEffect } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
-import { useRouter } from 'next/navigation'
-import Head from 'next/head'
-import { Github, Linkedin, Mail } from 'lucide-react'
+import { useState } from "react"
+import { motion } from "framer-motion"
+import { useRouter } from "next/navigation"
+import Head from "next/head"
+import { Github, Linkedin, Mail } from "lucide-react"
 
 const projects = [
     { name: "Scriptoria", description: "Where words reign supreme. A no-fuss, distraction-free zone for writers to craft stories, blogs, and ideas in pure markdown bliss." },
     { name: "Finesse", description: "Master your money game. A sleek dashboard that turns budgeting into a visual feast, helping you save smarter and spend cooler." },
     { name: "LeapSkill", description: "Level up your skills, one course at a time. Your gateway to interactive learning, with webinars, quizzes, and everything to make you a pro." },
-    { name: "Ascend", description: "Climb the career ladder. A job portal that's got your back with resume - building magic and top job matches—time to land your dream gig!" },
+    { name: "Ascend", description: "Climb the career ladder. A job portal that&apos;s got your back with resume-building magic and top job matches—time to land your dream gig!" },
 ]
 
 export default function Projects() {
-    const [command, setCommand] = useState('')
+    const [command, setCommand] = useState("")
     const router = useRouter()
 
     const handleCommand = (cmd: string) => {
-        if ([`home`, `about`, `chat`].includes(cmd)) {
-            router.push(cmd === `home` ? `/` : `/${cmd}`)
+        if (["home", "about", "chat"].includes(cmd)) {
+            router.push(cmd === "home" ? "/" : `/${cmd}`)
         }
     }
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault()
         handleCommand(command.toLowerCase().trim())
-        setCommand('')
+        setCommand("")
     }
 
     return (

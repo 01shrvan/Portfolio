@@ -1,34 +1,34 @@
 'use client'
 
-import { useState, useEffect } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
-import { useRouter } from 'next/navigation'
-import Head from 'next/head'
-import { Github, Linkedin, Mail } from 'lucide-react'
+import { useState } from "react"
+import { motion } from "framer-motion"
+import { useRouter } from "next/navigation"
+import Head from "next/head"
+import { Github, Linkedin, Mail } from "lucide-react"
 
 const skills = [
-    'JavaScript (ES6+)',
-    'React & Next.js',
-    'Node.js & Express',
-    'TypeScript',
-    'GraphQL',
-    'AWS & Serverless',
+    "JavaScript (ES6+)",
+    "React & Next.js",
+    "Node.js & Express",
+    "TypeScript",
+    "GraphQL",
+    "AWS & Serverless",
 ]
 
 export default function About() {
-    const [command, setCommand] = useState('')
+    const [command, setCommand] = useState("")
     const router = useRouter()
 
     const handleCommand = (cmd: string) => {
-        if (['home', 'projects', 'chat'].includes(cmd)) {
-            router.push(cmd === 'home' ? '/' : `/${cmd}`)
+        if (["home", "projects", "chat"].includes(cmd)) {
+            router.push(cmd === "home" ? "/" : `/${cmd}`)
         }
     }
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault()
         handleCommand(command.toLowerCase().trim())
-        setCommand('')
+        setCommand("")
     }
 
     return (
@@ -51,13 +51,13 @@ export default function About() {
                     </div>
                     <div className="bg-[#ECE0C8] text-[#2C3E50] p-6 rounded-lg shadow-md mb-8">
                         <p className="mb-4">
-                            I'm a full-stack engineer with a passion for building scalable and performant web applications. With years of experience in the industry, I've developed a keen eye for detail and a love for clean, efficient code.
+                            I&apos;m a full-stack engineer with a passion for building scalable and performant web applications. With years of experience in the industry, I&apos;ve developed a keen eye for detail and a love for clean, efficient code.
                         </p>
                         <p className="mb-4">
-                            My journey in tech started with a fascination for how things work, which naturally led me to programming. Since then, I've worked on a variety of projects, from small startups to large enterprise applications, always striving to learn and improve my craft.
+                            My journey in tech started with a fascination for how things work, which naturally led me to programming. Since then, I&apos;ve worked on a variety of projects, from small startups to large enterprise applications, always striving to learn and improve my craft.
                         </p>
                         <p>
-                            When I'm not coding, you can find me exploring new technologies, contributing to open-source projects, or sharing my knowledge through tech talks and blog posts.
+                            When I&apos;m not coding, you can find me exploring new technologies, contributing to open-source projects, or sharing my knowledge through tech talks and blog posts.
                         </p>
                     </div>
                     <h2 className="text-2xl font-bold mb-4 text-[#34495E]">Skills</h2>
