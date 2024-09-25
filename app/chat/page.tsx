@@ -15,7 +15,6 @@ export default function Contact() {
         e.preventDefault()
         setIsSubmitting(true)
 
-        // Prepare the data to send
         const data = { name, email, message }
 
         try {
@@ -32,7 +31,6 @@ export default function Contact() {
             }
 
             setResponseMessage("Your message has been sent successfully!")
-            // Reset form fields
             setName("")
             setEmail("")
             setMessage("")
@@ -54,7 +52,15 @@ export default function Contact() {
             </Head>
             <div className="min-h-screen flex flex-col bg-[#F5E6D3] text-[#2C3E50] font-mono p-8">
                 <h1 className="text-4xl font-bold text-[#34495E] mb-6 text-center">Contact Me</h1>
-                <form onSubmit={handleSubmit} className="bg-[#ECE0C8] p-8 rounded-lg shadow-md mx-auto max-w-lg">
+
+                {/* Align the intro with the form */}
+                <div className="bg-[#ECE0C8] p-8 rounded-lg shadow-md mx-auto w-full max-w-3xl mb-6">
+                    <p className="text-center text-lg text-[#34495E]">
+                        I’m excited to connect with like-minded professionals and explore new possibilities. Whether you have a collaboration in mind or just want to chat, feel free to drop a message!
+                    </p>
+                </div>
+
+                <form onSubmit={handleSubmit} className="bg-[#ECE0C8] p-8 rounded-lg shadow-md mx-auto w-full max-w-3xl">
                     <div className="mb-4">
                         <label className="block text-sm font-bold mb-2" htmlFor="name">Name</label>
                         <input
@@ -96,6 +102,7 @@ export default function Contact() {
                         {isSubmitting ? "Sending..." : "Send Message"}
                     </button>
                 </form>
+
                 {responseMessage && <p className={`text-center mt-4 ${responseMessage.includes("error") ? 'text-red-500' : 'text-green-500'}`}>{responseMessage}</p>}
 
                 <footer className="mt-8 pt-4 border-t border-[#2C3E50] max-w-3xl mx-auto w-full">
@@ -115,7 +122,7 @@ export default function Contact() {
                             </a>
                         </div>
                         <div className="flex items-center space-x-4">
-                            <span>mumbai, ndia</span>
+                            <span>mumbai, india</span>
                         </div>
                     </div>
                 </footer>
