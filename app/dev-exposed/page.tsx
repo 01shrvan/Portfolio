@@ -7,9 +7,17 @@ import Head from "next/head"
 import { Github, Linkedin, Mail, Cpu, Wifi, Battery, Clock, Monitor } from "lucide-react"
 
 export default function EnhancedDevExposed() {
-    const [command, setCommand] = useState("")
-    const [exposed, setExposed] = useState(false)
-    const [devInfo, setDevInfo] = useState({
+    const [command, setCommand] = useState<string>("")
+    const [exposed, setExposed] = useState<boolean>(false)
+    const [devInfo, setDevInfo] = useState<{
+        browser: string;
+        os: string;
+        screenSize: string;
+        battery: string;
+        time: string;
+        network: string;
+        cpuCores: number;
+    }>({
         browser: "",
         os: "",
         screenSize: "",
@@ -39,7 +47,7 @@ export default function EnhancedDevExposed() {
             }))
 
             if ("getBattery" in navigator) {
-                const bat: any = await (navigator as any).getBattery()
+                const bat = await (navigator as any).getBattery()
                 setDevInfo(prev => ({
                     ...prev,
                     battery: `${Math.round(bat.level * 100)}%`
@@ -119,8 +127,8 @@ export default function EnhancedDevExposed() {
                                     animate={{ opacity: 1 }}
                                     exit={{ opacity: 0 }}
                                 >
-                                    <p className="text-2xl font-bold mb-4">Yo, you think you're slick?</p>
-                                    <p className="text-xl mb-4">Bet you won't drop 'expose' though....No cap.</p>
+                                    <p className="text-2xl font-bold mb-4">Yo, you think you&apos;re slick?</p>
+                                    <p className="text-xl mb-4">Bet you won&apos;t drop &apos;expose&apos; though....No cap.</p>
                                 </motion.div>
                             ) : (
                                 <motion.div
@@ -151,7 +159,7 @@ export default function EnhancedDevExposed() {
                                             <Battery className="mr-2" /> Battery: {devInfo.battery || "lol... plug in 🔌"}
                                         </motion.div>
                                         <motion.div variants={infoVariants} className="flex items-center">
-                                            <Clock className="mr-2" /> Caught laggin' at {devInfo.time}, smh 😴
+                                            <Clock className="mr-2" /> Caught laggin&apos; at {devInfo.time}, smh 😴
                                         </motion.div>
                                     </motion.div>
                                 </motion.div>
