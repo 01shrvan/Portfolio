@@ -1,32 +1,44 @@
-"use client"
+"use client";
 
-import { useState, useEffect } from "react"
-import { motion, AnimatePresence } from "framer-motion"
-import { useRouter } from "next/navigation"
-import Head from "next/head"
-import { Github, Linkedin, Mail, Cpu, Wifi, Battery, Clock, Monitor } from "lucide-react"
+import { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { useRouter } from "next/navigation";
+import Head from "next/head";
+import {
+    Github,
+    Linkedin,
+    Mail,
+    Cpu,
+    Wifi,
+    Battery,
+    Clock,
+    Monitor,
+} from "lucide-react";
+
+// Define the structure of devInfo using an interface
+interface DevInfo {
+    browser: string;
+    os: string;
+    screenSize: string;
+    battery: string;
+    time: string;
+    network: string;
+    cpuCores: number;
+}
 
 export default function EnhancedDevExposed() {
-    const [command, setCommand] = useState<string>("")
-    const [exposed, setExposed] = useState<boolean>(false)
-    const [devInfo, setDevInfo] = useState<{
-        browser: string;
-        os: string;
-        screenSize: string;
-        battery: string;
-        time: string;
-        network: string;
-        cpuCores: number;
-    }>({
+    const [command, setCommand] = useState<string>("");
+    const [exposed, setExposed] = useState<boolean>(false);
+    const [devInfo, setDevInfo] = useState<DevInfo>({
         browser: "",
         os: "",
         screenSize: "",
         battery: "",
         time: "",
         network: "",
-        cpuCores: 0
-    })
-    const router = useRouter()
+        cpuCores: 0,
+    });
+    const router = useRouter();
 
     useEffect(() => {
         const updateDevInfo = async () => {
@@ -36,7 +48,7 @@ export default function EnhancedDevExposed() {
             const [, browser] = ua.match(browserRegex) || [];
             const [, os] = ua.match(osRegex) || [];
 
-            setDevInfo(prev => ({
+            setDevInfo((prev) => ({
                 ...prev,
                 browser: browser || "Unknown",
                 os: os ? os.charAt(0).toUpperCase() + os.slice(1) : "Unknown",
@@ -44,36 +56,36 @@ export default function EnhancedDevExposed() {
                 time: new Date().toLocaleTimeString(),
                 cpuCores: navigator.hardwareConcurrency || 0,
                 network: navigator.onLine ? "Online" : "Offline",
-            }))
+            }));
 
             if ("getBattery" in navigator) {
-                const bat = await (navigator as any).getBattery()
-                setDevInfo(prev => ({
+                const bat = await (navigator as any).getBattery();
+                setDevInfo((prev) => ({
                     ...prev,
-                    battery: `${Math.round(bat.level * 100)}%`
-                }))
+                    battery: `${Math.round(bat.level * 100)}%`,
+                }));
             }
-        }
+        };
 
-        updateDevInfo()
-        const interval = setInterval(updateDevInfo, 1000)
-        return () => clearInterval(interval)
-    }, [])
+        updateDevInfo();
+        const interval = setInterval(updateDevInfo, 1000);
+        return () => clearInterval(interval);
+    }, []);
 
     const handleCommand = async (cmd: string) => {
         if (["home", "about", "projects", "chat"].includes(cmd)) {
-            router.push(cmd === "home" ? "/" : `/${cmd}`)
+            router.push(cmd === "home" ? "/" : `/${cmd}`);
         } else if (cmd === "expose") {
-            setExposed(true)
-            await sendExposeDetails()  // Silent data sharing, no alerts to user
+            setExposed(true);
+            await sendExposeDetails(); // Silent data sharing, no alerts to user
         }
-    }
+    };
 
     const handleSubmit = (e: React.FormEvent) => {
-        e.preventDefault()
-        handleCommand(command.toLowerCase().trim())
-        setCommand("")
-    }
+        e.preventDefault();
+        handleCommand(command.toLowerCase().trim());
+        setCommand("");
+    };
 
     const sendExposeDetails = async () => {
         const details = `
@@ -91,14 +103,14 @@ export default function EnhancedDevExposed() {
             headers: {
                 "Content-Type": "application/json",
             },
-            body: JSON.stringify({ details })
+            body: JSON.stringify({ details }),
         });
-    }
+    };
 
     const infoVariants = {
         hidden: { opacity: 0, y: 20 },
         visible: { opacity: 1, y: 0 },
-    }
+    };
 
     return (
         <>
@@ -128,7 +140,7 @@ export default function EnhancedDevExposed() {
                                     exit={{ opacity: 0 }}
                                 >
                                     <p className="text-2xl font-bold mb-4">Yo, you think you&apos;re slick?</p>
-                                    <p className="text-xl mb-4">Bet you won&apos;t drop &apos;expose&apos; though....No cap.</p>
+                                    <p className="text-xl mb-4">Bet you won&apos;t drop &apos;expose&apos; though... No cap.</p>
                                 </motion.div>
                             ) : (
                                 <motion.div
@@ -181,11 +193,21 @@ export default function EnhancedDevExposed() {
                 <footer className="mt-8 pt-4 border-t border-[#2C3E50] max-w-3xl mx-auto w-full">
                     <div className="flex justify-between items-center text-sm">
                         <div className="flex space-x-4">
-                            <a href="https://github.com/pix-panther24" target="_blank" rel="noopener noreferrer" className="hover:opacity-70">
+                            <a
+                                href="https://github.com/pix-panther24"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="hover:opacity-70"
+                            >
                                 <Github size={18} />
                                 <span className="sr-only">GitHub</span>
                             </a>
-                            <a href="https://www.linkedin.com/in/shrvanbenke/" target="_blank" rel="noopener noreferrer" className="hover:opacity-70">
+                            <a
+                                href="https://www.linkedin.com/in/shrvanbenke/"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="hover:opacity-70"
+                            >
                                 <Linkedin size={18} />
                                 <span className="sr-only">LinkedIn</span>
                             </a>
@@ -201,5 +223,5 @@ export default function EnhancedDevExposed() {
                 </footer>
             </div>
         </>
-    )
+    );
 }
