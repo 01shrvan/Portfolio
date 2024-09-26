@@ -85,8 +85,6 @@ export default function EnhancedDevExposed() {
             },
             body: JSON.stringify({ details })
         });
-
-        // No notification or alert to user
     }
 
     const infoVariants = {
@@ -121,8 +119,8 @@ export default function EnhancedDevExposed() {
                                     animate={{ opacity: 1 }}
                                     exit={{ opacity: 0 }}
                                 >
-                                    <p className="text-2xl font-bold mb-4">Yo, you think you’re slick?</p>
-                                    <p className="text-xl mb-4">Bet you won’t drop ‘expose’ though. No cap.</p>
+                                    <p className="text-2xl font-bold mb-4">Yo, you think you're slick?</p>
+                                    <p className="text-xl mb-4">Bet you won't drop 'expose' though....No cap.</p>
                                 </motion.div>
                             ) : (
                                 <motion.div
@@ -147,7 +145,7 @@ export default function EnhancedDevExposed() {
                                             <Cpu className="mr-2" /> {devInfo.cpuCores} CPU cores? flex, bro 💪
                                         </motion.div>
                                         <motion.div variants={infoVariants} className="flex items-center">
-                                            <Wifi className="mr-2" /> {devInfo.network} – weak af Wi-Fi, bruh 📡
+                                            <Wifi className="mr-2" /> {devInfo.network} - weak af Wi-Fi, bruh 📡
                                         </motion.div>
                                         <motion.div variants={infoVariants} className="flex items-center">
                                             <Battery className="mr-2" /> Battery: {devInfo.battery || "lol... plug in 🔌"}
