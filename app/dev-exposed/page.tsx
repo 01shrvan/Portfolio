@@ -1,4 +1,4 @@
-'use client'
+"use client"
 
 import { useState, useEffect } from "react"
 import { motion, AnimatePresence } from "framer-motion"
@@ -7,17 +7,9 @@ import Head from "next/head"
 import { Github, Linkedin, Mail, Cpu, Wifi, Battery, Clock, Monitor } from "lucide-react"
 
 export default function EnhancedDevExposed() {
-    const [command, setCommand] = useState<string>("")
-    const [exposed, setExposed] = useState<boolean>(false)
-    const [devInfo, setDevInfo] = useState<{
-        browser: string,
-        os: string,
-        screenSize: string,
-        battery: string,
-        time: string,
-        network: string,
-        cpuCores: number
-    }>({
+    const [command, setCommand] = useState("")
+    const [exposed, setExposed] = useState(false)
+    const [devInfo, setDevInfo] = useState({
         browser: "",
         os: "",
         screenSize: "",
@@ -44,35 +36,35 @@ export default function EnhancedDevExposed() {
                 time: new Date().toLocaleTimeString(),
                 cpuCores: navigator.hardwareConcurrency || 0,
                 network: navigator.onLine ? "Online" : "Offline",
-            }));
+            }))
 
-            if ('getBattery' in navigator) {
-                const battery: BatteryManager = await (navigator as any).getBattery();
+            if ("getBattery" in navigator) {
+                const bat: any = await (navigator as any).getBattery()
                 setDevInfo(prev => ({
                     ...prev,
-                    battery: `${Math.round(battery.level * 100)}%`
-                }));
+                    battery: `${Math.round(bat.level * 100)}%`
+                }))
             }
-        };
+        }
 
-        updateDevInfo();
-        const interval = setInterval(updateDevInfo, 1000);
-        return () => clearInterval(interval);
-    }, []);
+        updateDevInfo()
+        const interval = setInterval(updateDevInfo, 1000)
+        return () => clearInterval(interval)
+    }, [])
 
     const handleCommand = async (cmd: string) => {
         if (["home", "about", "projects", "chat"].includes(cmd)) {
-            router.push(cmd === "home" ? "/" : `/${cmd}`);
+            router.push(cmd === "home" ? "/" : `/${cmd}`)
         } else if (cmd === "expose") {
-            setExposed(true);
-            await sendExposeDetails();  // Silent data sharing, no alerts to user
+            setExposed(true)
+            await sendExposeDetails()  // Silent data sharing, no alerts to user
         }
     }
 
     const handleSubmit = (e: React.FormEvent) => {
-        e.preventDefault();
-        handleCommand(command.toLowerCase().trim());
-        setCommand("");
+        e.preventDefault()
+        handleCommand(command.toLowerCase().trim())
+        setCommand("")
     }
 
     const sendExposeDetails = async () => {
@@ -86,10 +78,10 @@ export default function EnhancedDevExposed() {
             Battery: ${devInfo.battery || "N/A"}
         `;
 
-        await fetch('/api/expose', {
-            method: 'POST',
+        await fetch("/api/expose", {
+            method: "POST",
             headers: {
-                'Content-Type': 'application/json',
+                "Content-Type": "application/json",
             },
             body: JSON.stringify({ details })
         });
@@ -130,7 +122,7 @@ export default function EnhancedDevExposed() {
                                     exit={{ opacity: 0 }}
                                 >
                                     <p className="text-2xl font-bold mb-4">Yo, you think you’re slick?</p>
-                                    <p className="text-xl mb-4">Bet you won’t drop &apos;expose&apos; though. No cap.</p>
+                                    <p className="text-xl mb-4">Bet you won’t drop ‘expose’ though. No cap.</p>
                                 </motion.div>
                             ) : (
                                 <motion.div
@@ -161,7 +153,7 @@ export default function EnhancedDevExposed() {
                                             <Battery className="mr-2" /> Battery: {devInfo.battery || "lol... plug in 🔌"}
                                         </motion.div>
                                         <motion.div variants={infoVariants} className="flex items-center">
-                                            <Clock className="mr-2" /> Caught laggin&apos; at {devInfo.time}, smh 😴
+                                            <Clock className="mr-2" /> Caught laggin' at {devInfo.time}, smh 😴
                                         </motion.div>
                                     </motion.div>
                                 </motion.div>
