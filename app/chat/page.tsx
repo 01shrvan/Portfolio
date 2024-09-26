@@ -18,7 +18,9 @@ export default function EnhancedChatPage() {
         <div className="min-h-screen flex flex-col bg-[#F5E6D3] text-[#2C3E50] font-mono p-8">
             <main className="flex-grow max-w-3xl mx-auto w-full">
                 <h1 className="text-3xl font-bold text-[#34495E] mb-4">Chat</h1>
-                <p className="text-lg text-[#34495E] mb-8">Let's start a conversation about your project. Fill out the form below, and I'll get back to you soon!</p>
+                <p className="text-lg text-[#34495E] mb-8">
+                    Let&apos;s start a conversation about your project. Fill out the form below, and I&apos;ll get back to you soon!
+                </p>
                 <form onSubmit={handleSubmit} className="space-y-6">
                     <p className="text-2xl font-bold text-[#34495E]">Hello,</p>
 
