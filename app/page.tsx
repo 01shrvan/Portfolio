@@ -16,7 +16,6 @@ export default function Home() {
   const terminalRef = useRef<HTMLDivElement>(null)
 
   const initialMessages = [
-    "Welcome to my portfolio.",
     "I'm Shrvan Benke, a passionate full-stack developer dedicated to crafting innovative web solutions.",
     'Type "help" for available commands.',
   ];

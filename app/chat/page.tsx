@@ -80,7 +80,7 @@ export default function EnhancedChatPage() {
                     </button>
                 </form>
             </main>
-            <footer className="mt-8 pt-4 border-t border-[#2C3E50] max-w-3xl mx-auto w-full px-8">
+            <footer className="mt-8 pt-4 border-t border-[#2C3E50] max-w-3xl mx-auto w-full">
                 <div className="flex justify-between items-center text-sm">
                     <div className="flex space-x-4">
                         <a href="https://github.com/pix-panther24" target="_blank" rel="noopener noreferrer" className="hover:opacity-70">

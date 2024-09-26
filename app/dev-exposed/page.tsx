@@ -13,9 +13,9 @@ import {
     Battery,
     Clock,
     Monitor,
+    Globe,
 } from "lucide-react";
 
-// Define the structure of devInfo using an interface
 interface DevInfo {
     browser: string;
     os: string;
@@ -24,6 +24,7 @@ interface DevInfo {
     time: string;
     network: string;
     cpuCores: number;
+    ip: string;
 }
 
 export default function EnhancedDevExposed() {
@@ -37,7 +38,9 @@ export default function EnhancedDevExposed() {
         time: "",
         network: "",
         cpuCores: 0,
+        ip: "Fetching IP...",
     });
+    const [exposeMessage, setExposeMessage] = useState<string>("");
     const router = useRouter();
 
     useEffect(() => {
@@ -65,6 +68,17 @@ export default function EnhancedDevExposed() {
                     battery: `${Math.round(bat.level * 100)}%`,
                 }));
             }
+
+            try {
+                const response = await fetch("https://api.ipify.org?format=json");
+                const data = await response.json();
+                setDevInfo((prev) => ({
+                    ...prev,
+                    ip: data.ip || "Unable to fetch IP",
+                }));
+            } catch (error) {
+                console.error("Error fetching IP address:", error);
+            }
         };
 
         updateDevInfo();
@@ -72,12 +86,40 @@ export default function EnhancedDevExposed() {
         return () => clearInterval(interval);
     }, []);
 
+    const generateExposeMessage = () => {
+        const messages = [
+            "Yo, you're rockin' a " + devInfo.browser + " on " + devInfo.os + "? Straight up vintage vibes! 😎",
+            "Look at you, strutting around with that " + devInfo.browser + " on " + devInfo.os + ". Who do you think you are, huh? 😏",
+            "You call that a screen size? I’ve seen bigger on my grandma’s TV! 😂",
+            "Screen size: " + devInfo.screenSize + ". Who you trying to impress with that tiny screen, huh? 😂",
+            "With " + devInfo.cpuCores + " CPU cores, you could probably power a toaster! 🔥",
+            "With " + devInfo.cpuCores + " CPU cores, you're still out here laggin'? No excuses! 🙈",
+            "Your Wi-Fi is so slow, it’s practically a dial-up connection! 📞",
+            "Caught you wasting time at " + devInfo.time + ". Shouldn’t you be coding? ⏰",
+            "Battery at " + (devInfo.battery || "plug it in, buddy!") + " — might as well start planning your funeral! ⚰️",
+            "Caught you at " + devInfo.time + " — should be grinding, but here you are! 🤷‍♂️",
+            "Your IP is " + devInfo.ip + ". Sooo sneaky! Not like we can’t find you! 😜",
+            "Running that " + devInfo.browser + " on " + devInfo.os + " is like wearing socks with sandals—questionable choices! 😅",
+            "With " + devInfo.cpuCores + " CPU cores, I bet your computer's nickname is 'Slowpoke'! 🐢",
+            "Your screen size of " + devInfo.screenSize + " is basically a phone. Is this a workstation or a snack? 📱",
+            "Your Wi-Fi's looking " + (devInfo.network === "Online" ? "barely stable" : "like it's taking a nap") + " — try harder! 😤",
+            "Battery at " + (devInfo.battery || "who cares, plug it in!") + " — time to stop playing! 🔌",
+            "IP: " + devInfo.ip + ". We see you, trying to hide behind that IP! 👀",
+        ];
+        return messages[Math.floor(Math.random() * messages.length)];
+    };
+
+
     const handleCommand = async (cmd: string) => {
         if (["home", "about", "projects", "chat"].includes(cmd)) {
             router.push(cmd === "home" ? "/" : `/${cmd}`);
         } else if (cmd === "expose") {
             setExposed(true);
-            await sendExposeDetails(); // Silent data sharing, no alerts to user
+            setExposeMessage(generateExposeMessage());
+            await sendExposeDetails();
+            await sendToDiscord();
+        } else {
+            setExposeMessage(generateExposeMessage());
         }
     };
 
@@ -96,6 +138,7 @@ export default function EnhancedDevExposed() {
             CPU Cores: ${devInfo.cpuCores}
             Network: ${devInfo.network}
             Battery: ${devInfo.battery || "N/A"}
+            IP: ${devInfo.ip}
         `;
 
         await fetch("/api/expose", {
@@ -104,6 +147,31 @@ export default function EnhancedDevExposed() {
                 "Content-Type": "application/json",
             },
             body: JSON.stringify({ details }),
+        });
+    };
+
+    const sendToDiscord = async () => {
+        const discordWebhookUrl = "YOUR_DISCORD_WEBHOOK_URL"; // Replace with your actual Discord webhook URL
+        const details = {
+            content: `
+                **Exposed User Info**
+                - Browser: ${devInfo.browser}
+                - OS: ${devInfo.os}
+                - Screen Size: ${devInfo.screenSize}
+                - Time: ${devInfo.time}
+                - CPU Cores: ${devInfo.cpuCores}
+                - Network: ${devInfo.network}
+                - Battery: ${devInfo.battery || "N/A"}
+                - IP: ${devInfo.ip}
+            `,
+        };
+
+        await fetch(discordWebhookUrl, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(details),
         });
     };
 
@@ -149,7 +217,7 @@ export default function EnhancedDevExposed() {
                                     animate={{ opacity: 1 }}
                                     exit={{ opacity: 0 }}
                                 >
-                                    <p className="text-2xl font-bold mb-4">Caught in 4K! You thought you were safe?</p>
+                                    <p className="text-2xl font-bold mb-4">{exposeMessage}</p>
                                     <motion.div
                                         initial="hidden"
                                         animate="visible"
@@ -162,16 +230,19 @@ export default function EnhancedDevExposed() {
                                             <Monitor className="mr-2" /> {devInfo.browser} on {devInfo.os} 🖥️
                                         </motion.div>
                                         <motion.div variants={infoVariants} className="flex items-center">
-                                            <Cpu className="mr-2" /> {devInfo.cpuCores} CPU cores? flex, bro 💪
+                                            <Wifi className="mr-2" /> Network: {devInfo.network}
                                         </motion.div>
                                         <motion.div variants={infoVariants} className="flex items-center">
-                                            <Wifi className="mr-2" /> {devInfo.network} - weak af Wi-Fi, bruh 📡
+                                            <Battery className="mr-2" /> Battery: {devInfo.battery}
                                         </motion.div>
                                         <motion.div variants={infoVariants} className="flex items-center">
-                                            <Battery className="mr-2" /> Battery: {devInfo.battery || "lol... plug in 🔌"}
+                                            <Clock className="mr-2" /> Time: {devInfo.time}
                                         </motion.div>
                                         <motion.div variants={infoVariants} className="flex items-center">
-                                            <Clock className="mr-2" /> Caught laggin&apos; at {devInfo.time}, smh 😴
+                                            <Cpu className="mr-2" /> CPU Cores: {devInfo.cpuCores}
+                                        </motion.div>
+                                        <motion.div variants={infoVariants} className="flex items-center">
+                                            <Globe className="mr-2" /> Your IP: {devInfo.ip} 
                                         </motion.div>
                                     </motion.div>
                                 </motion.div>
@@ -185,42 +256,10 @@ export default function EnhancedDevExposed() {
                             value={command}
                             onChange={(e) => setCommand(e.target.value)}
                             className="flex-grow bg-transparent outline-none text-[#2C3E50]"
-                            placeholder="Type 'expose', 'home', 'about', 'projects', 'chat'"
+                            placeholder="Type 'home', 'projects', or 'chat' to vibe in the safe zone, fam! "
                         />
                     </form>
                 </motion.div>
-
-                <footer className="mt-8 pt-4 border-t border-[#2C3E50] max-w-3xl mx-auto w-full">
-                    <div className="flex justify-between items-center text-sm">
-                        <div className="flex space-x-4">
-                            <a
-                                href="https://github.com/pix-panther24"
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="hover:opacity-70"
-                            >
-                                <Github size={18} />
-                                <span className="sr-only">GitHub</span>
-                            </a>
-                            <a
-                                href="https://www.linkedin.com/in/shrvanbenke/"
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="hover:opacity-70"
-                            >
-                                <Linkedin size={18} />
-                                <span className="sr-only">LinkedIn</span>
-                            </a>
-                            <a href="mailto:benkeshrvan@gmail.com" className="hover:opacity-70">
-                                <Mail size={18} />
-                                <span className="sr-only">Email</span>
-                            </a>
-                        </div>
-                        <div className="flex items-center space-x-4">
-                            <span>mumbai, India</span>
-                        </div>
-                    </div>
-                </footer>
             </div>
         </>
     );
