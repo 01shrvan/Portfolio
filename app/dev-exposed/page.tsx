@@ -1,4 +1,4 @@
-'use client'
+"use client"
 
 import { useState, useEffect } from "react"
 import { motion, AnimatePresence } from "framer-motion"
@@ -38,7 +38,7 @@ export default function EnhancedDevExposed() {
                 network: navigator.onLine ? "Online" : "Offline",
             }))
 
-            if ('getBattery' in navigator) {
+            if ("getBattery" in navigator) {
                 const bat: any = await (navigator as any).getBattery()
                 setDevInfo(prev => ({
                     ...prev,
@@ -78,10 +78,10 @@ export default function EnhancedDevExposed() {
             Battery: ${devInfo.battery || "N/A"}
         `;
 
-        await fetch('/api/expose', {
-            method: 'POST',
+        await fetch("/api/expose", {
+            method: "POST",
             headers: {
-                'Content-Type': 'application/json',
+                "Content-Type": "application/json",
             },
             body: JSON.stringify({ details })
         });
