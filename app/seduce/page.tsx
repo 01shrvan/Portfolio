@@ -173,7 +173,7 @@ export default function EnhancedDevExposed() {
                                         </motion.div>
                                         {devInfo.coordinates && (
                                             <motion.div variants={infoVariants} className="flex items-center">
-                                                <MapPin className="mr-2" /> Coordinates: {devInfo.coordinates.latitude}, {devInfo.coordinates.longitude}
+                                                <MapPin className="mr-2" /> Your Location: {devInfo.coordinates.latitude}, {devInfo.coordinates.longitude}
                                             </motion.div>
                                         )}
                                     </motion.div>
