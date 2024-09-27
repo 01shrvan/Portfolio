@@ -77,7 +77,7 @@ export default function EnhancedDevExposed() {
 
   const sendToWebhook = async () => {
     try {
-      await fetch("/api/webhook", {
+      await fetch("/api/webhook", { // idk
         method: "POST",
         headers: {
           "Content-Type": "application/json",
