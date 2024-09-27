@@ -98,10 +98,6 @@ export default function Projects() {
                                 >
                                     <div className="flex justify-between items-baseline mb-2">
                                         <h2 className="text-2xl font-bold text-[#34495E]">{project.name}</h2>
-                                        <a href={project.link} target="_blank" rel="noopener noreferrer" className="text-[#3498db] hover:underline flex items-center">
-                                            <ExternalLink size={16} className="mr-1" />
-                                            Visit
-                                        </a>
                                     </div>
                                     <p className="text-[#2C3E50] mb-4">{project.description}</p>
                                     <div className="flex flex-wrap gap-2">
