@@ -20,9 +20,6 @@ export default function EnhancedDevExposed() {
   const [exposed, setExposed] = useState<boolean>(false);
   const [exposeMessage, setExposeMessage] = useState<string>("");
   const [command, setCommand] = useState<string>("");
-  const webhookUrl = process.env.WEBHOOK_URL;
-
-  const router = useRouter();
 
   useEffect(() => {
     const updateDevInfo = async () => {
