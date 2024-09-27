@@ -11,10 +11,7 @@ const skills = [
     "React & Next.js",
     "Node.js",
     "TypeScript",
-    "GraphQL",
     "MongoDB",
-    "AWS",
-    "Docker",
 ]
 
 export default function About() {
