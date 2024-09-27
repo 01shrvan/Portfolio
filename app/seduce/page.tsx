@@ -20,6 +20,7 @@ export default function EnhancedDevExposed() {
   const [exposed, setExposed] = useState<boolean>(false);
   const [exposeMessage, setExposeMessage] = useState<string>("");
   const [command, setCommand] = useState<string>("");
+  const router = useRouter();
 
   useEffect(() => {
     const updateDevInfo = async () => {
@@ -63,11 +64,11 @@ export default function EnhancedDevExposed() {
     const randomLines = [
       "You thought you were incognito? Nah fam.",
       "Caught ya red-handed, my dude!",
-      "Welcome to the club, you’re officially exposed!",
+      "Welcome to the club, you're officially exposed!",
       "Not so sneaky now, are we?",
-      "Guess you can’t hide from the internet, huh?",
-      "Oopsie, looks like someone’s not in stealth mode!",
-      "Surprise! You can’t escape the digital eye!",
+      "Guess you can't hide from the internet, huh?",
+      "Oopsie, looks like someone's not in stealth mode!",
+      "Surprise! You can't escape the digital eye!",
     ];
     const randomLine =
       randomLines[Math.floor(Math.random() * randomLines.length)];
@@ -77,7 +78,7 @@ export default function EnhancedDevExposed() {
 
   const sendToWebhook = async () => {
     try {
-      await fetch("/api/webhook", { // idk
+      await fetch("/api/webhook", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
