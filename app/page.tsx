@@ -9,7 +9,6 @@ import Head from "next/head"
 export default function Home() {
   const [input, setInput] = useState("")
   const [output, setOutput] = useState<string[]>([])
-  const [showCursor, setShowCursor] = useState(true)
   const [hints, setHints] = useState<string[]>([])
   const [greeting, setGreeting] = useState("")
   const router = useRouter()
@@ -35,10 +34,6 @@ export default function Home() {
   useEffect(() => {
     setOutput(initialMessages);
 
-    const cursorInterval = setInterval(() => {
-      setShowCursor((prev) => !prev)
-    }, 500)
-
     const updateGreeting = () => {
       const hour = new Date().getHours()
       if (hour < 12) setGreeting("Good morning")
@@ -51,7 +46,6 @@ export default function Home() {
     const greetingInterval = setInterval(updateGreeting, 60000)
 
     return () => {
-      clearInterval(cursorInterval)
       clearInterval(greetingInterval)
     }
   }, [])
@@ -137,22 +131,23 @@ export default function Home() {
           </div>
           <h2 className="text-2xl mb-4 text-[#34495E] font-semibold">Full-Stack Developer</h2>
           <p className="text-lg mb-8 text-[#34495E]">{greeting}, welcome to my interactive portfolio!</p>
-          <div ref={terminalRef} className="mb-8 bg-[#ECE0C8] text-[#2C3E50] p-6 rounded-lg shadow-lg h-80 overflow-y-auto border border-[#D1B894]">
-            <AnimatePresence>
-              {output.map((line, index) => (
-                <motion.div
-                  key={index}
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -10 }}
-                  transition={{ duration: 0.2 }}
-                  className="mb-2"
-                >
-                  {line}
-                </motion.div>
-              ))}
-            </AnimatePresence>
-            {showCursor && <span className="cursor">|</span>}
+          <div className="mb-8 bg-[#ECE0C8] text-[#2C3E50] p-6 rounded-lg shadow-lg border border-[#D1B894] h-80 flex flex-col">
+            <div ref={terminalRef} className="flex-grow overflow-y-auto">
+              <AnimatePresence>
+                {output.map((line, index) => (
+                  <motion.div
+                    key={index}
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -10 }}
+                    transition={{ duration: 0.2 }}
+                    className="mb-2"
+                  >
+                    {line}
+                  </motion.div>
+                ))}
+              </AnimatePresence>
+            </div>
           </div>
           <form onSubmit={handleSubmit} className="flex items-center bg-[#ECE0C8] text-[#2C3E50] p-4 rounded-lg shadow-lg relative border border-[#D1B894]">
             <Terminal size={18} className="mr-2 text-[#34495E]" />
@@ -164,13 +159,6 @@ export default function Home() {
               placeholder="Type a command or 'help'"
               autoFocus
             />
-            <motion.span
-              animate={{ opacity: showCursor ? 1 : 0 }}
-              transition={{ duration: 0.2 }}
-              className="text-[#34495E]"
-            >
-              |
-            </motion.span>
             {hints.length > 0 && (
               <div className="absolute left-0 bottom-full mb-2 bg-[#ECE0C8] text-[#2C3E50] p-2 rounded-md shadow-md border border-[#D1B894]">
                 {hints.map((hint, index) => (
