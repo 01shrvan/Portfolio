@@ -1,27 +1,54 @@
 'use client'
 
 import { useState } from "react"
+import { useForm } from "react-hook-form"
 import { motion, AnimatePresence } from "framer-motion"
 import { Github, Linkedin, Mail, Send, User, Briefcase, HelpCircle, AtSign } from "lucide-react"
 
-export default function EnhancedChatPage() {
-    const [name, setName] = useState("")
-    const [company, setCompany] = useState("")
-    const [project, setProject] = useState("")
-    const [email, setEmail] = useState("")
-    const [submitted, setSubmitted] = useState(false)
+type FormData = {
+    name: string
+    company: string
+    project: string
+    email: string
+}
 
-    const handleSubmit = (e: React.FormEvent) => {
-        e.preventDefault()
-        console.log({ name, company, project, email })
-        setSubmitted(true)
+export default function EnhancedChatPage() {
+    const [submitted, setSubmitted] = useState(false)
+    const [isLoading, setIsLoading] = useState(false)
+    const [error, setError] = useState<string | null>(null)
+    const { register, handleSubmit, formState: { errors } } = useForm<FormData>()
+
+    const onSubmit = async (data: FormData) => {
+        setIsLoading(true)
+        setError(null)
+        try {
+            const response = await fetch('/api/send-email', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data),
+            })
+
+            if (response.ok) {
+                setSubmitted(true)
+            } else {
+                const errorData = await response.json()
+                setError(errorData.error || 'Failed to send email')
+            }
+        } catch (error) {
+            console.error('Error:', error)
+            setError('An unexpected error occurred')
+        } finally {
+            setIsLoading(false)
+        }
     }
 
     const inputFields = [
-        { id: 'name', value: name, setter: setName, label: 'My name is', icon: <User size={18} /> },
-        { id: 'company', value: company, setter: setCompany, label: 'I work for', icon: <Briefcase size={18} /> },
-        { id: 'project', value: project, setter: setProject, label: '& need help with', icon: <HelpCircle size={18} /> },
-        { id: 'email', value: email, setter: setEmail, label: 'You can email me at', icon: <AtSign size={18} /> },
+        { id: 'name', label: 'My name is', icon: <User size={18} /> },
+        { id: 'company', label: 'I work for', icon: <Briefcase size={18} /> },
+        { id: 'project', label: '& need help with', icon: <HelpCircle size={18} /> },
+        { id: 'email', label: 'You can email me at', icon: <AtSign size={18} /> },
     ]
 
     return (
@@ -50,7 +77,7 @@ export default function EnhancedChatPage() {
                             animate={{ opacity: 1, y: 0 }}
                             exit={{ opacity: 0, y: -20 }}
                             transition={{ duration: 0.5 }}
-                            onSubmit={handleSubmit}
+                            onSubmit={handleSubmit(onSubmit)}
                             className="space-y-6 bg-[#ECE0C8] p-6 rounded-lg shadow-lg"
                         >
                             <p className="text-2xl font-bold text-[#34495E]">Hello,</p>
@@ -70,22 +97,40 @@ export default function EnhancedChatPage() {
                                     <input
                                         type={field.id === 'email' ? 'email' : 'text'}
                                         id={field.id}
-                                        value={field.value}
-                                        onChange={(e) => field.setter(e.target.value)}
+                                        {...register(field.id as keyof FormData, { required: true })}
                                         className="w-full bg-transparent border-b-2 border-[#34495E] outline-none text-lg text-[#2C3E50] p-2 transition-all duration-300 focus:border-[#3498db]"
-                                        required
                                     />
+                                    {errors[field.id as keyof FormData] && (
+                                        <span className="text-red-500 text-sm">This field is required</span>
+                                    )}
                                 </motion.div>
                             ))}
+
+                            {error && (
+                                <motion.div
+                                    initial={{ opacity: 0 }}
+                                    animate={{ opacity: 1 }}
+                                    className="text-red-500 text-sm"
+                                >
+                                    {error}
+                                </motion.div>
+                            )}
 
                             <motion.button
                                 whileHover={{ scale: 1.05 }}
                                 whileTap={{ scale: 0.95 }}
                                 type="submit"
-                                className="w-full bg-[#34495E] text-white py-3 rounded-lg text-lg mt-6 hover:bg-[#2C3E50] transition-colors flex items-center justify-center"
+                                disabled={isLoading}
+                                className="w-full bg-[#34495E] text-white py-3 rounded-lg text-lg mt-6 hover:bg-[#2C3E50] transition-colors flex items-center justify-center disabled:opacity-50"
                             >
-                                <Send size={18} className="mr-2" />
-                                Send Message
+                                {isLoading ? (
+                                    <span>Sending...</span>
+                                ) : (
+                                    <>
+                                        <Send size={18} className="mr-2" />
+                                        Send Message
+                                    </>
+                                )}
                             </motion.button>
                         </motion.form>
                     ) : (
@@ -95,8 +140,8 @@ export default function EnhancedChatPage() {
                             transition={{ duration: 0.5 }}
                             className="bg-[#ECE0C8] p-6 rounded-lg shadow-lg text-center"
                         >
-                            <h2 className="text-2xl font-bold text-[#34495E] mb-4">Thank you, {name}!</h2>
-                            <p className="text-lg text-[#2C3E50]">I've received your message and will get back to you soon at {email}.</p>
+                            <h2 className="text-2xl font-bold text-[#34495E] mb-4">Thank you!</h2>
+                            <p className="text-lg text-[#2C3E50]">I've received your message and will get back to you soon.</p>
                         </motion.div>
                     )}
                 </AnimatePresence>
