@@ -172,26 +172,26 @@ export default function Home() {
         </motion.div>
 
         <footer className="mt-8 pt-4 border-t border-[#2C3E50] max-w-3xl mx-auto w-full">
-                    <div className="flex justify-between items-center text-sm">
-                        <div className="flex space-x-4">
-                            <a href="https://github.com/01shrvan" target="_blank" rel="noopener noreferrer" className="hover:opacity-70 transition-opacity duration-200">
-                                <Github size={18} />
-                                <span className="sr-only">GitHub</span>
-                            </a>
-                            <a href="https://www.linkedin.com/in/shrvanbenke/" target="_blank" rel="noopener noreferrer" className="hover:opacity-70 transition-opacity duration-200">
-                                <Linkedin size={18} />
-                                <span className="sr-only">LinkedIn</span>
-                            </a>
-                            <a href="mailto:benkeshrvan@gmail.com" className="hover:opacity-70 transition-opacity duration-200">
-                                <Mail size={18} />
-                                <span className="sr-only">Email</span>
-                            </a>
-                        </div>
-                        <div className="flex items-center space-x-4">
-                            <span>Mumbai, India</span>
-                        </div>
-                    </div>
-                </footer>
+          <div className="flex justify-between items-center text-sm">
+            <div className="flex space-x-4">
+              <a href="https://github.com/01shrvan" target="_blank" rel="noopener noreferrer" className="hover:opacity-70 transition-opacity duration-200">
+                <Github size={18} />
+                <span className="sr-only">GitHub</span>
+              </a>
+              <a href="https://www.linkedin.com/in/shrvanbenke/" target="_blank" rel="noopener noreferrer" className="hover:opacity-70 transition-opacity duration-200">
+                <Linkedin size={18} />
+                <span className="sr-only">LinkedIn</span>
+              </a>
+              <a href="mailto:benkeshrvan@gmail.com" className="hover:opacity-70 transition-opacity duration-200">
+                <Mail size={18} />
+                <span className="sr-only">Email</span>
+              </a>
+            </div>
+            <div className="flex items-center space-x-4">
+              <span>Mumbai, India</span>
+            </div>
+          </div>
+        </footer>
       </div>
     </>
   )
