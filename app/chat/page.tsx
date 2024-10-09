@@ -22,7 +22,7 @@ export default function EnhancedChatPage() {
         setIsLoading(true)
         setError(null)
         try {
-            const response = await fetch('/api/send-email', {
+            const response = await fetch("/api/chat", {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

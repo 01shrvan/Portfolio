@@ -7,7 +7,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ message: "Invalid request" }, { status: 400 });
   }
 
-  const discordWebhookUrl = process.env.DISCORD_WEBHOOK_URL;
+  const discordWebhookUrl = process.env.SEDUCE_WEBHOOK_URL;
 
   if (!discordWebhookUrl) {
     console.error("Discord webhook URL is not set in environment variables");
