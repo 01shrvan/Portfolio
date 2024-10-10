@@ -68,7 +68,7 @@ export default function Home() {
           await simulateTyping(`Navigating to ${cmd} page...`);
           setTimeout(() => router.push(`/${cmd}`), 1000);
         } else if (cmd === "github") {
-          window.open("https://github.com/pix-panther24", "_blank");
+          window.open("https://github.com/01shrvan", "_blank");
           setOutput((prev) => [...prev, "Opening GitHub profile in a new tab..."]);
         } else if (cmd === "linkedin") {
           window.open("https://www.linkedin.com/in/shrvanbenke/", "_blank");
